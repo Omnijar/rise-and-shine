@@ -1,2 +1,4 @@
-# rise-and-shine
+# Rise and Shine
 Rise video game.
+
+## Setup Instructions
