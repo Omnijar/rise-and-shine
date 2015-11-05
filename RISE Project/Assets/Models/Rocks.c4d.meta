@@ -1,0 +1,127 @@
+fileFormatVersion: 2
+guid: 8d9b6f3452c354106a4ac52c97e6e30d
+timeCreated: 1446585880
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: RockFormation
+    100002: RockFormation_1
+    100004: RockFormation_2
+    100006: RockFormation_3
+    100008: RockFormation_4
+    100010: RockFormation_5
+    100012: RockFormation_6
+    100014: RockFormation_7
+    100016: RockFormation_8
+    100018: RockFormation_9
+    100020: //RootNode
+    100022: GroundPiece
+    400000: RockFormation
+    400002: RockFormation_1
+    400004: RockFormation_2
+    400006: RockFormation_3
+    400008: RockFormation_4
+    400010: RockFormation_5
+    400012: RockFormation_6
+    400014: RockFormation_7
+    400016: RockFormation_8
+    400018: RockFormation_9
+    400020: //RootNode
+    400022: GroundPiece
+    2300000: RockFormation
+    2300002: RockFormation_1
+    2300004: RockFormation_2
+    2300006: RockFormation_3
+    2300008: RockFormation_4
+    2300010: RockFormation_5
+    2300012: RockFormation_6
+    2300014: RockFormation_7
+    2300016: RockFormation_8
+    2300018: RockFormation_9
+    2300020: GroundPiece
+    3300000: RockFormation
+    3300002: RockFormation_1
+    3300004: RockFormation_2
+    3300006: RockFormation_3
+    3300008: RockFormation_4
+    3300010: RockFormation_5
+    3300012: RockFormation_6
+    3300014: RockFormation_7
+    3300016: RockFormation_8
+    3300018: RockFormation_9
+    3300020: GroundPiece
+    4300000: RockFormation_9
+    4300002: RockFormation_8
+    4300004: RockFormation_7
+    4300006: RockFormation_6
+    4300008: RockFormation_5
+    4300010: RockFormation_4
+    4300012: RockFormation_3
+    4300014: RockFormation_2
+    4300016: RockFormation_1
+    4300018: RockFormation
+    4300020: GroundPiece
+    9500000: //RootNode
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
