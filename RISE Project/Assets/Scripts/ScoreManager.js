@@ -5,14 +5,21 @@ var currentScore : float;
 var actualScore : float;
 var highScore : float;
 
+var timeScore : int;
+var highTimeScore : int;
+
 // Interface
 var scoreText : UnityEngine.UI.Text;
 var scoreAnimator : Animator;
+
+// Scripts
+var timeManager : TimeManager;
 
 private var incrementSpeed : float = 500f;
 
 function Awake () {
 	highScore = PlayerPrefs.GetFloat("highScore");	
+	highTimeScore = PlayerPrefs.GetInt("timeHighScore");	
 	scoreText.text = "x 0";	
 }
 
@@ -32,7 +39,8 @@ function Update () {
 	if(currentScore != actualScore){
 		currentScore += Time.deltaTime*incrementSpeed;
 		currentScore = Mathf.Clamp(currentScore, 0, actualScore);
-		//currentScore = Mathf.Lerp(currentScore, actualScore, Time.deltaTime*incrementSpeed);
 		scoreText.text = "x " + Mathf.RoundToInt(currentScore).ToString();
 	}
+	
+	timeScore = timeManager.timer;
 }

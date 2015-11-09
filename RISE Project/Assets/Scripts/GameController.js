@@ -30,7 +30,7 @@ function StartGame () : IEnumerator {
 
 	startGame = true;
 	//menuAnimator.SetBool("Hide", true);
-	yield WaitForSeconds(1f);
+	//yield WaitForSeconds(1f);
 	playerController.StartGame();
 	timeManager.EnableTimer(gameTime);
 	
