@@ -12,8 +12,8 @@ var acceleration : float = 1f;
 var errorCorrection : boolean;
 var errorCorrectionTime : float = 0.2f; // seconds
 
-@Range(0f,20f)
-var jumpHeight : float = 12f;
+@Range(10f,100f)
+var jumpHeight : float = 22.5;
 
 var animator : Animator;
 var characterVisual : Transform;
@@ -48,6 +48,7 @@ var audioManager : AudioManager;
 
 var jumpCheckTime : float = 0.2f;
 var holdingJump : boolean;
+var lifeManager : LifeManager;
 
 function Awake () {
 	// Set interactive regions
@@ -73,6 +74,8 @@ function JumpCheck () : IEnumerator {
 	
 	holdingJump = true;
 	
+	JumpSmall();
+	
 	var jumpTime : float;
 	
 	while(holdingJump && jumpTime < jumpCheckTime){
@@ -83,7 +86,7 @@ function JumpCheck () : IEnumerator {
 	if(jumpTime >= jumpCheckTime && holdingJump){
 		JumpBig();
 	}else{
-		JumpSmall();
+		//JumpSmall();
 	}
 	
 	holdingJump = false;
@@ -91,8 +94,19 @@ function JumpCheck () : IEnumerator {
 }
 
 function Update () {
-	if(!playable)
+
+	if(!playable){
+		if(keyboardMode && lifeManager.respawning)
+			if(Input.GetKeyDown(KeyCode.Space))
+				lifeManager.fastSpawn = true;
+		
+		if(touchMode && lifeManager.respawning)
+			if(Input.GetMouseButton(0))
+				if(Input.mousePosition.y > jumpBoundary)
+					lifeManager.fastSpawn = true;
+			
 		return;
+	}
 	// Check for input
 	
 	//KEYBOARD
@@ -233,19 +247,19 @@ function JumpSmall () : IEnumerator {
 }
 
 function JumpBig () : IEnumerator {
-	if(jumping && !errorCorrection)
-		return;
+	//if(jumping && !errorCorrection)
+	//	return;
 	
 	Debug.Log("Jump Big");
 	errorCorrection = false;
 	jumping = true;	
 	audioManager.Jump();
-	characterRigidbody.velocity.y = jumpHeight;	
+	characterRigidbody.velocity.y += jumpHeight/2;		
 	yield WaitForSeconds(0.1f); // Lift off
 	
-	while(!grounded){
-		yield; // Wait until landed
-	}
+	//while(!grounded){
+	//	yield; // Wait until landed
+	//}
 	
-	jumping = false;
+	//jumping = false;
 }

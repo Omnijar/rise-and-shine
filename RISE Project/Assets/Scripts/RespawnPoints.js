@@ -3,6 +3,7 @@ import System.Collections.Generic;
 
 var respawnColor : Color;
 var respawns : List.<Transform>;
+var playerMesh : Mesh;
 
 function FindClosestRespawn (lastLocation : Vector3) : Transform {
 	var closest : Transform = respawns[0];
@@ -34,7 +35,7 @@ function OnDrawGizmos () : void {
 
 	if(respawns.Count > 0)
 		for(var i = 0; i < respawns.Count; i++){
-			Gizmos.DrawCube(respawns[i].position, Vector3.one);
+			Gizmos.DrawMesh(playerMesh, respawns[i].position, Quaternion.identity);
 		}
 }
 

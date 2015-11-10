@@ -14,7 +14,8 @@ var playerController : PlayerController;
 var cameraManager : CameraManager;
 var gameController : GameController;
 
-private var respawning : boolean;
+var fastSpawn : boolean;
+var respawning : boolean;
 
 function Awake () {
 	livesText.text = lives.ToString();
@@ -51,15 +52,23 @@ function Respawn (lastLocation : Vector3) : IEnumerator {
 		return;
 		
 	respawning = true;
-	yield WaitForSeconds(respawnTime);
+	
+	var i : float;
+	
+	while ( i < 1 && !fastSpawn ) {
+		i+= Time.deltaTime/respawnTime;
+		yield;
+	}
 	
 	playerController.RegainControl();
 	playerController.audioManager.Respawn();
 	cameraManager.RegainControl();
 	
 	transform.position = respawnPoints.FindClosestRespawn(lastLocation).position;
-	
+	playerController.transform.gameObject.GetComponent.<Rigidbody>().velocity = Vector3.zero;
+	fastSpawn = false;
 	respawning = false;
+	
 }
 
 function GameOver () {
