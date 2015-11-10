@@ -20,7 +20,7 @@ var totalValue : UnityEngine.UI.Text;
 
 var highscoreAnimator : Animator;
 
-var totalGameTime : int = 600;
+private var totalGameTime : int = 300;
 
 var buttons : UnityEngine.UI.Button[];
 

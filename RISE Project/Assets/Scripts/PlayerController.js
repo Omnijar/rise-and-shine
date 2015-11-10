@@ -21,7 +21,7 @@ var characterVisual : Transform;
 var direction : int; // horizontal movement
 
 var jumping : boolean;
-private var grounded : boolean = true;
+var grounded : boolean = true;
  
 private var characterRigidbody : Rigidbody; // Set at runtime
 private var jumpBoundary : float; // Set at runtime
@@ -46,6 +46,9 @@ private var interacting : boolean; // User input detection
 private var forward : boolean; // characterVisual direction
 var audioManager : AudioManager;
 
+var jumpCheckTime : float = 0.2f;
+var holdingJump : boolean;
+
 function Awake () {
 	// Set interactive regions
 	startLocation = transform.position;
@@ -62,6 +65,29 @@ function Awake () {
 
 function StartGame () : void {
 	playable = true;
+}
+
+function JumpCheck () : IEnumerator {
+	if(holdingJump || !errorCorrection && !grounded)
+		return;
+	
+	holdingJump = true;
+	
+	var jumpTime : float;
+	
+	while(holdingJump && jumpTime < jumpCheckTime){
+		jumpTime += Time.deltaTime;
+		yield;
+	}
+	
+	if(jumpTime >= jumpCheckTime && holdingJump){
+		JumpBig();
+	}else{
+		JumpSmall();
+	}
+	
+	holdingJump = false;
+	
 }
 
 function Update () {
@@ -86,7 +112,12 @@ function Update () {
 		}
 	
 		if(Input.GetKeyDown(KeyCode.Space))
-			Jump();
+			JumpCheck();
+		
+		if(Input.GetKeyUp(KeyCode.Space))
+			holdingJump = false;
+			
+			
 	}
 	
 	//TOUCH
@@ -103,7 +134,7 @@ function Update () {
 			
 			if(Input.mousePosition.y > jumpBoundary){
 				jumpPanel.SetBool("Jump", true);	
-				Jump();
+				JumpBig();
 			}else{
 				jumpPanel.SetBool("Jump", false);	
 			}
@@ -160,7 +191,7 @@ function ErrorCorrection () : IEnumerator {
 		
 	errorCorrection = true;
 	var i : float = 0f;
-	while( i < errorCorrectionTime && !grounded) {
+	while( i < errorCorrectionTime) {
 		i += Time.deltaTime;
 		yield;
 	}
@@ -183,10 +214,29 @@ function RegainControl () : void {
 	playable = true;
 }
 
-function Jump () : IEnumerator {
+function JumpSmall () : IEnumerator {
 	if(jumping && !errorCorrection)
 		return;
 	
+	Debug.Log("Jump Small");
+	errorCorrection = false;
+	jumping = true;	
+	audioManager.Jump();
+	characterRigidbody.velocity.y = jumpHeight/1.5;	
+	yield WaitForSeconds(0.1f); // Lift off
+	
+	while(!grounded){
+		yield; // Wait until landed
+	}
+	
+	jumping = false;
+}
+
+function JumpBig () : IEnumerator {
+	if(jumping && !errorCorrection)
+		return;
+	
+	Debug.Log("Jump Big");
 	errorCorrection = false;
 	jumping = true;	
 	audioManager.Jump();

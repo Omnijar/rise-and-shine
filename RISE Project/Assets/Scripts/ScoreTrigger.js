@@ -5,6 +5,7 @@ var timeToScoreScreen : float = 1f;
 var scoreSystem : ScoreSystem;
 var slowmotionCurve : AnimationCurve;
 var levelComplete : Animator;
+var gameController : GameController;
 
 function OnTriggerEnter ( other : Collider ) : void {
 	End(other.transform.gameObject);
@@ -15,6 +16,7 @@ function End (player : GameObject) : IEnumerator {
 		return;
 		
 	ended = true;
+	gameController.gameEnded = true;
 	
 	yield WaitForSeconds(0.5f);
 	

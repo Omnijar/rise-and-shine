@@ -25,8 +25,10 @@ function RegainControl () : void {
 }
 
 function LateUpdate () {
-	if(follow)
-		playerCamera.position = Vector3.SmoothDamp(playerCamera.position, target.position+offset, velocity, Time.deltaTime*speed);
+	if(follow){
+		playerCamera.position.x = Mathf.SmoothDamp(playerCamera.position.x, target.position.x+offset.x, velocity.x, Time.deltaTime*speed);
+		playerCamera.position.y = Mathf.SmoothDamp(playerCamera.position.y, target.position.y+offset.y, velocity.y, Time.deltaTime*(speed*3));		
+	}	
 		
 		//playerCamera.position = Vector3.Lerp(playerCamera.position, target.position+offset, Time.deltaTime*speed);
 		//playerCamera.position.x = target.position.x+offset.x;

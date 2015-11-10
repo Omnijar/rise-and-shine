@@ -6,7 +6,7 @@ var audioOn : Sprite;
 var audioOff : Sprite;
 var audioButton : UnityEngine.UI.Image;
 
-var toggle : boolean = true;
+var toggle : boolean;
 private var toggleInt : int;
 
 // 0 = Off
@@ -15,21 +15,33 @@ private var toggleInt : int;
 function Start () {
 	toggleInt = PlayerPrefs.GetInt("SFX");
 	
+	Debug.Log("SFX is - " + toggleInt);
+	
 	if(toggleInt == 0)
-		Toggle();
+		On();
+	else
+		Off();
 			
 }
 
 function Toggle () : void {
-	toggle = !toggle;
-
 	if(toggle){
-		audioButton.sprite = audioOn;
-		PlayerPrefs.SetInt("SFX", 1);
-		sfxMixer.SetFloat("SFXvolume", 0f);
+		Off();
 	}else{
-		audioButton.sprite = audioOff;
-		PlayerPrefs.SetInt("SFX", 0);
-		sfxMixer.SetFloat("SFXvolume", -100f);
+		On();
 	}
+}
+
+function On () : void {
+	audioButton.sprite = audioOn;
+	PlayerPrefs.SetInt("SFX", 0);
+	sfxMixer.SetFloat("SFXvolume", 0f);
+	toggle = true;
+}
+
+function Off () : void {
+	audioButton.sprite = audioOff;
+	PlayerPrefs.SetInt("SFX", 1);
+	sfxMixer.SetFloat("SFXvolume", -100f);
+	toggle = false;
 }

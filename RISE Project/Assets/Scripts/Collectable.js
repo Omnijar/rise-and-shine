@@ -1,6 +1,7 @@
 ﻿#pragma strict
 
 var worth : int = 250;
+private var pitchIncrease : float = 0.1f;
 var animator : Animator;
 
 public var audioClip: AudioClip;
@@ -16,8 +17,12 @@ function OnTriggerEnter (other : Collider) : void {
 		return;
 
 	used = true;
+	var scoreManager : ScoreManager = other.GetComponent.<ScoreManager>();
+	var thisPitch : float = scoreManager.GetPitch();	
+	audioSource.pitch = thisPitch;
 	audioSource.PlayOneShot(audioClip, 1F);
-	other.GetComponent.<ScoreManager>().AddScore(worth);
+	scoreManager.AddScore(worth);
+	scoreManager.currentPitch += pitchIncrease;
 	Remove();
 }
 
