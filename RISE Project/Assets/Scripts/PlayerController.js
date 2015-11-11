@@ -50,6 +50,8 @@ var jumpCheckTime : float = 0.2f;
 var holdingJump : boolean;
 var lifeManager : LifeManager;
 
+var previousTouchPoint : Vector2;
+
 function Awake () {
 	#if UNITY_ANDROID || UNITY_IPHONE
 		keyboardMode = false;
@@ -141,18 +143,44 @@ function Update () {
 	
 	//TOUCH
 	if(touchMode){
-     if (Input.touchCount == 1 || Input.touchCount == 2 ){  // 
+		
+		#if UNITY_ANDROID || UNITY_IPHONE
+	    if (Input.touchCount == 1 || Input.touchCount == 2 ){  // 
 
 			interacting = true;
 			
-			if(Input.GetTouch(0).position.x < leftBoundary)
+			if(Input.GetTouch(0).phase == TouchPhase.Began)
+				previousTouchPoint = Input.GetTouch(0).position;
+			
+			if(Input.GetTouch(0).position.x < previousTouchPoint.x-10)
 				direction = -1;
-			else if(Input.GetTouch(0).position.x > rightBoundary)
+			else if(Input.GetTouch(0).position.x > previousTouchPoint.x+10)
 				direction = 1;
 			else
 				direction = 0;
+		
+			if(Input.GetTouch(1).phase == TouchPhase.Ended)
+				holdingJump = false;
+		
+		#endif	
+		#if UNITY_STANDALONE || UNITY_WEBGL
+		 if(Input.GetMouseButton(0)){
+			
+			interacting = true;
+			
+			if(Input.GetMouseButtonDown(0))
+				previousTouchPoint = Input.mousePosition;
+					
+			if(Input.mousePosition.x < previousTouchPoint.x-10)
+				direction = -1;
+			else if(Input.mousePosition.x > previousTouchPoint.x+10)
+				direction = 1;
+			else
+				direction = 0;		
+		#endif		
 			
 		}else{
+			previousTouchPoint = Vector2.zero;
 			interacting = false;
 			jumpPanel.SetBool("Jump", false);	
 			direction = 0;
@@ -161,34 +189,9 @@ function Update () {
      	if (Input.touchCount == 2){  // 
 			if(Input.GetTouch(1).phase == TouchPhase.Began)
 				JumpCheck();
-			
-			if(Input.GetTouch(1).phase == TouchPhase.Ended)
-				holdingJump = false;
+		
 		}
 		
-		/*
-		if(Input.GetMouseButton(0)){
-			interacting = true;
-			
-			if(Input.mousePosition.x < leftBoundary)
-				direction = -1;
-			else if(Input.mousePosition.x > rightBoundary)
-				direction = 1;
-			else
-				direction = 0;
-			
-			if(Input.mousePosition.y > jumpBoundary){
-				jumpPanel.SetBool("Jump", true);	
-				JumpBig();
-			}else{
-				jumpPanel.SetBool("Jump", false);	
-			}
-						
-		}else{
-			interacting = false;
-			jumpPanel.SetBool("Jump", false);	
-		}
-		*/
 	}
 	
 	// Manage acceleration
