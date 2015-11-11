@@ -51,6 +51,9 @@ var holdingJump : boolean;
 var lifeManager : LifeManager;
 
 var previousTouchPoint : Vector2;
+var lastPosition : Vector2;
+var jumpSwipe : float;
+var jumpLine : float;
 
 function Awake () {
 	#if UNITY_ANDROID || UNITY_IPHONE
@@ -65,6 +68,7 @@ function Awake () {
 	rightBoundary = Screen.width-halfWidth;
 	jumpBoundary = Screen.height*(jumpScreenPercentage/100);
 	jumpPanelHeight.rect.y = jumpBoundary;
+	jumpSwipe = Screen.height/jumpScreenPercentage;
 	// Set Physics
 	characterRigidbody = GetComponent.<Rigidbody>();
 	// Set Audio
@@ -75,25 +79,37 @@ function StartGame () : void {
 	playable = true;
 }
 
-function JumpCheck () : IEnumerator {
+function JumpCheck ( inputType : int ) : IEnumerator {
 	if(holdingJump || !errorCorrection && !grounded)
 		return;
-	
+		
 	holdingJump = true;
 	
 	JumpSmall();
 	
 	var jumpTime : float;
 	
-	while(holdingJump && jumpTime < jumpCheckTime){
-		jumpTime += Time.deltaTime;
-		yield;
-	}
-	
-	if(jumpTime >= jumpCheckTime && holdingJump){
-		JumpBig();
-	}else{
-		//JumpSmall();
+	if(inputType == 0){
+		while(holdingJump && jumpTime < jumpCheckTime){
+			jumpTime += Time.deltaTime;
+			yield;
+		}
+		
+		if(jumpTime >= jumpCheckTime && holdingJump)
+			JumpBig();		
+	}else if(inputType == 1){
+		while(jumpTime < jumpCheckTime){
+			jumpTime += Time.deltaTime;
+			yield;
+		}	
+	}else if(inputType == 2){
+		while(holdingJump && jumpTime < jumpCheckTime){
+			jumpTime += Time.deltaTime;
+			yield;
+		}	
+		if(jumpTime >= jumpCheckTime)
+			JumpBig();			
+		
 	}
 	
 	holdingJump = false;
@@ -133,7 +149,7 @@ function Update () {
 		}
 	
 		if(Input.GetKeyDown(KeyCode.Space))
-			JumpCheck();
+			JumpCheck(0);
 		
 		if(Input.GetKeyUp(KeyCode.Space))
 			holdingJump = false;
@@ -159,8 +175,12 @@ function Update () {
 			else
 				direction = 0;
 		
-			if(Input.GetTouch(1).phase == TouchPhase.Ended)
-				holdingJump = false;
+			
+			
+			
+			
+			//if(Input.GetTouch(1).phase == TouchPhase.Ended)
+			//	holdingJump = false;
 		
 		#endif	
 		#if UNITY_STANDALONE || UNITY_WEBGL
@@ -168,15 +188,48 @@ function Update () {
 			
 			interacting = true;
 			
-			if(Input.GetMouseButtonDown(0))
+			if(Input.GetMouseButtonDown(0)){
+				lastPosition = Input.mousePosition;
 				previousTouchPoint = Input.mousePosition;
-					
-			if(Input.mousePosition.x < previousTouchPoint.x-10)
+			}
+			
+			if(previousTouchPoint.y > Input.mousePosition.y){
+				previousTouchPoint.y = Input.mousePosition.y;
+			}
+			
+			if(Input.mousePosition.x < previousTouchPoint.x-30)
 				direction = -1;
-			else if(Input.mousePosition.x > previousTouchPoint.x+10)
+			else if(Input.mousePosition.x > previousTouchPoint.x+30)
 				direction = 1;
 			else
-				direction = 0;		
+				direction = 0;	
+			
+			var currentPosition = Input.mousePosition;
+			var deltaPosition = currentPosition-lastPosition;
+			lastPosition = currentPosition;
+			
+			if(deltaPosition.y > 5){
+				jumpLine = Input.mousePosition.y-previousTouchPoint.y;
+			}else{
+				if(jumpLine > 300){
+					JumpCheck(2);
+					Debug.Log(jumpLine);
+				}else if(jumpLine > 75){
+					JumpCheck(1);
+				}
+				previousTouchPoint.y = Input.mousePosition.y;
+				jumpLine = 0;
+			}
+			
+			
+			/*
+			if(deltaPosition.y > jumpSwipe){ // 40
+				JumpCheck(2);
+			}else if(deltaPosition.y > jumpSwipe/2){ //22.5
+				JumpCheck(1);
+			} 
+			*/
+														
 		#endif		
 			
 		}else{
@@ -186,11 +239,13 @@ function Update () {
 			direction = 0;
 		}
 		
+		/*
      	if (Input.touchCount == 2){  // 
 			if(Input.GetTouch(1).phase == TouchPhase.Began)
-				JumpCheck();
+				JumpCheck(0);
 		
 		}
+		*/
 		
 	}
 	
