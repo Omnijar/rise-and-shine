@@ -35,7 +35,6 @@ var touchMode : boolean;
 
 // Interface
 
-var jumpPanelHeight : RectTransform;
 var jumpPanel : Animator;
 
 var playable : boolean;
@@ -54,6 +53,12 @@ var previousTouchPoint : Vector2;
 var lastPosition : Vector2;
 var jumpSwipe : float;
 var jumpLine : float;
+
+var movementPanelWidth : int = 200;
+var movementPanelHeight : int = 200;
+var jumpPanelWidth : int = 100;
+var jumpPanelHeight : int = 100;
+var edging : int = 20;
 
 function Awake () {
 	#if UNITY_ANDROID || UNITY_IPHONE
@@ -168,10 +173,51 @@ function Update () {
 	if(touchMode){
 		
 		#if UNITY_ANDROID || UNITY_IPHONE
+		
+		var fingerCount = 0;
+
+		
 	    if (Input.touchCount == 1 || Input.touchCount == 2 ){  // 
 
 			interacting = true;
 			
+			for (var touch : Touch in Input.touches) {
+				
+				//Check for Jump
+				if(touch.phase == TouchPhase.Began){
+					if(touch.position.x > edging && touch.position.x < jumpPanelWidth+edging && touch.position.y > edging && touch.position.y < jumpPanelHeight+edging)
+						JumpCheck(0);
+					
+				}
+							
+				if(touch.phase == TouchPhase.Ended){
+					if(touch.position.x > edging && touch.position.x < jumpPanelWidth+edging && touch.position.y > edging && touch.position.y < jumpPanelHeight+edging)
+						holdingJump = false;
+				}
+											
+				if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled){
+					
+					//Movement
+					if(touch.position.x > Screen.width-(movementPanelWidth+edging) && touch.position.x < Screen.width-edging && touch.position.y > edging && touch.position.y < movementPanelHeight+edging){
+						//Left
+						if(touch.position.x > Screen.width-(movementPanelWidth+edging) && touch.position.x < Screen.width-edging-(movementPanelWidth/2) && touch.position.y > edging && touch.position.y < movementPanelHeight+edging){
+							direction = -1;
+						}
+						
+						//Right
+						if(touch.position.x > (Screen.width-(movementPanelWidth+edging))+(movementPanelWidth/2) && touch.position.x < Screen.width-edging && touch.position.y > edging && touch.position.y < movementPanelHeight+edging){
+							direction = 1;
+						}						
+					}else{
+						direction = 0;
+					}
+				}
+			}		
+			
+			
+			
+			
+			/*
 			if(Input.GetTouch(0).phase == TouchPhase.Began){
 				previousTouchPoint = Input.GetTouch(0).position;
 				lastPosition = Input.GetTouch(0).position;
@@ -195,6 +241,8 @@ function Update () {
 			}else if(deltaPosition.y>30){
 					JumpCheck(1);			
 			}
+			
+			*/
 			
 			/*	
 			if(deltaPosition.y > 5){
@@ -265,7 +313,7 @@ function Update () {
 		}else{
 			previousTouchPoint = Vector2.zero;
 			interacting = false;
-			jumpPanel.SetBool("Jump", false);	
+			//jumpPanel.SetBool("Jump", false);	
 			direction = 0;
 		}
 		
