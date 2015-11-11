@@ -17,6 +17,8 @@ var gameController : GameController;
 var fastSpawn : boolean;
 var respawning : boolean;
 
+var characterFollowers : Follow[];
+
 function Awake () {
 	livesText.text = lives.ToString();
 }
@@ -60,15 +62,30 @@ function Respawn (lastLocation : Vector3) : IEnumerator {
 		yield;
 	}
 	
+	Follow(true);	
+	
 	playerController.RegainControl();
 	playerController.audioManager.Respawn();
 	cameraManager.RegainControl();
 	
 	transform.position = respawnPoints.FindClosestRespawn(lastLocation).position;
 	playerController.transform.gameObject.GetComponent.<Rigidbody>().velocity = Vector3.zero;
+		
 	fastSpawn = false;
 	respawning = false;
-	
+	yield;
+	Follow(false);
+}
+
+function Follow ( toggle : boolean ) : IEnumerator {
+	for(var i = 0; i < characterFollowers.Length; i++){
+		if(characterFollowers[i].collected){
+			if(toggle)
+				characterFollowers[i].respawning = true;
+			else
+				characterFollowers[i].Initialise(true);
+		}
+	}
 }
 
 function GameOver () {

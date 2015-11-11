@@ -20,7 +20,7 @@ function OnTriggerEnter (other : Collider) : void {
 	var scoreManager : ScoreManager = other.GetComponent.<ScoreManager>();
 	audioSource.PlayOneShot(audioClip, 1F);
 	scoreManager.AddScore(worth);
-	follow.Initialise();
+	follow.Initialise(false);
 	Remove();
 }
 

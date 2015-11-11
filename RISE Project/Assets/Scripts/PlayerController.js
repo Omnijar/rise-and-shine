@@ -51,6 +51,11 @@ var holdingJump : boolean;
 var lifeManager : LifeManager;
 
 function Awake () {
+	#if UNITY_ANDROID || UNITY_IPHONE
+		keyboardMode = false;
+		touchMode = true;
+	#endif
+
 	// Set interactive regions
 	startLocation = transform.position;
 	var halfWidth : float = (Screen.width/2)-(staticMargin/2);
@@ -136,6 +141,32 @@ function Update () {
 	
 	//TOUCH
 	if(touchMode){
+     if (Input.touchCount == 1 || Input.touchCount == 2 ){  // 
+
+			interacting = true;
+			
+			if(Input.GetTouch(0).position.x < leftBoundary)
+				direction = -1;
+			else if(Input.GetTouch(0).position.x > rightBoundary)
+				direction = 1;
+			else
+				direction = 0;
+			
+		}else{
+			interacting = false;
+			jumpPanel.SetBool("Jump", false);	
+			direction = 0;
+		}
+		
+     	if (Input.touchCount == 2){  // 
+			if(Input.GetTouch(1).phase == TouchPhase.Began)
+				JumpCheck();
+			
+			if(Input.GetTouch(1).phase == TouchPhase.Ended)
+				holdingJump = false;
+		}
+		
+		/*
 		if(Input.GetMouseButton(0)){
 			interacting = true;
 			
@@ -157,6 +188,7 @@ function Update () {
 			interacting = false;
 			jumpPanel.SetBool("Jump", false);	
 		}
+		*/
 	}
 	
 	// Manage acceleration
@@ -232,7 +264,7 @@ function JumpSmall () : IEnumerator {
 	if(jumping && !errorCorrection)
 		return;
 	
-	Debug.Log("Jump Small");
+	//Debug.Log("Jump Small");
 	errorCorrection = false;
 	jumping = true;	
 	audioManager.Jump();
@@ -250,7 +282,7 @@ function JumpBig () : IEnumerator {
 	//if(jumping && !errorCorrection)
 	//	return;
 	
-	Debug.Log("Jump Big");
+	//Debug.Log("Jump Big");
 	errorCorrection = false;
 	jumping = true;	
 	audioManager.Jump();
