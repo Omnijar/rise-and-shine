@@ -67,7 +67,7 @@ function Awake () {
 	leftBoundary = halfWidth;
 	rightBoundary = Screen.width-halfWidth;
 	jumpBoundary = Screen.height*(jumpScreenPercentage/100);
-	jumpPanelHeight.rect.y = jumpBoundary;
+	//jumpPanelHeight.rect.y = jumpBoundary;
 	jumpSwipe = Screen.height/jumpScreenPercentage;
 	// Set Physics
 	characterRigidbody = GetComponent.<Rigidbody>();
@@ -118,6 +118,13 @@ function JumpCheck ( inputType : int ) : IEnumerator {
 
 function Update () {
 
+	animator.SetBool("jumping", jumping);
+	
+	if(characterRigidbody.velocity.magnitude > 1)
+		animator.SetInteger("speed", 1);	
+	else
+		animator.SetInteger("speed", 0);
+	
 	if(!playable){
 		if(keyboardMode && lifeManager.respawning)
 			if(Input.GetKeyDown(KeyCode.Space))
@@ -165,22 +172,45 @@ function Update () {
 
 			interacting = true;
 			
-			if(Input.GetTouch(0).phase == TouchPhase.Began)
+			if(Input.GetTouch(0).phase == TouchPhase.Began){
 				previousTouchPoint = Input.GetTouch(0).position;
+				lastPosition = Input.GetTouch(0).position;
+			}
 			
-			if(Input.GetTouch(0).position.x < previousTouchPoint.x-10)
+			if(Input.GetTouch(0).position.x < previousTouchPoint.x-70)
 				direction = -1;
-			else if(Input.GetTouch(0).position.x > previousTouchPoint.x+10)
+			else if(Input.GetTouch(0).position.x > previousTouchPoint.x+70)
 				direction = 1;
 			else
 				direction = 0;
 		
+		
+		
+			var currentPosition = Input.GetTouch(0).position;
+			var deltaPosition = currentPosition-lastPosition;
+			lastPosition = currentPosition;	
 			
+			if(deltaPosition.y > 60){
+					JumpCheck(2);
+			}else if(deltaPosition.y>30){
+					JumpCheck(1);			
+			}
 			
-			
-			
-			//if(Input.GetTouch(1).phase == TouchPhase.Ended)
-			//	holdingJump = false;
+			/*	
+			if(deltaPosition.y > 5){
+				//track Y				
+				jumpLine = Input.GetTouch(0).position.y-previousTouchPoint.y;
+			}else{
+				//reset Y
+				if(jumpLine > Screen.height/3){
+					JumpCheck(2);
+				}else if(jumpLine > Screen.height/4){
+					JumpCheck(1);
+				}
+				previousTouchPoint.y = Input.GetTouch(0).position.y;
+				jumpLine = 0;	
+			}
+			*/
 		
 		#endif	
 		#if UNITY_STANDALONE || UNITY_WEBGL
@@ -333,6 +363,8 @@ function JumpSmall () : IEnumerator {
 		yield; // Wait until landed
 	}
 	
+	animator.SetBool("jumpBig", false);
+
 	jumping = false;
 }
 
@@ -341,6 +373,7 @@ function JumpBig () : IEnumerator {
 	//	return;
 	
 	//Debug.Log("Jump Big");
+	animator.SetTrigger("bigJump");
 	errorCorrection = false;
 	jumping = true;	
 	audioManager.Jump();

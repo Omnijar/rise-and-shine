@@ -1,7 +1,7 @@
 ﻿#pragma strict
 
 var worth : int = 2000;
-var animator : Animator;
+//var animator : Animator;
 var follow : Follow;
 
 public var audioClip: AudioClip;

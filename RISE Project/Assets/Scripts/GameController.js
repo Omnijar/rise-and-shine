@@ -18,6 +18,7 @@ var startGame : boolean;
 var sceneLoader : SceneLoader;
 var slowmotionCurve : AnimationCurve;
 var gameEnded : boolean;
+var menuButton : UnityEngine.UI.Button;
 
 function Start () {
 	StartGame();
@@ -60,7 +61,9 @@ function EndGame () : IEnumerator {
 function EndGame () : IEnumerator {
 	if(gameEnded)
 		return;
-		
+	
+	menuButton.interactable = false;
+	
 	yield WaitForSeconds(1f);
 	
 	if(gameEnded)
