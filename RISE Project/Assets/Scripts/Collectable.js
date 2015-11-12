@@ -19,7 +19,7 @@ function OnTriggerEnter (other : Collider) : void {
 	used = true;
 	var scoreManager : ScoreManager = other.GetComponent.<ScoreManager>();
 	var thisPitch : float = scoreManager.GetPitch();	
-	audioSource.pitch = thisPitch;
+	//audioSource.pitch = thisPitch;
 	audioSource.PlayOneShot(audioClip, 1F);
 	scoreManager.AddScore(worth);
 	scoreManager.currentPitch += pitchIncrease;

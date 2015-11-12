@@ -60,6 +60,17 @@ var jumpPanelWidth : int = 100;
 var jumpPanelHeight : int = 100;
 var edging : int = 20;
 
+var jumpRect : RectTransform;
+var leftRect : RectTransform;
+var rightRect : RectTransform;
+
+var jumpRectInteractive : Rect;
+var leftRectInteractive : Rect;
+var rightRectInteractive : Rect;
+
+var canvasScaler : UnityEngine.UI.CanvasScaler;
+var scaleFactor : float;
+
 function Awake () {
 	#if UNITY_ANDROID || UNITY_IPHONE
 		keyboardMode = false;
@@ -78,6 +89,26 @@ function Awake () {
 	characterRigidbody = GetComponent.<Rigidbody>();
 	// Set Audio
 	audioManager = GetComponent.<AudioManager>();
+}
+
+function Start () {
+	scaleFactor = canvasScaler.scaleFactor;
+	
+	jumpRectInteractive.x = 20*scaleFactor;
+	jumpRectInteractive.y = 20*scaleFactor;
+	jumpRectInteractive.height = 100*scaleFactor;
+	jumpRectInteractive.width = 100*scaleFactor;
+	
+	leftRectInteractive.x = Screen.width-((20+200)*scaleFactor);
+	leftRectInteractive.y = 20*scaleFactor;
+	leftRectInteractive.height = 100*scaleFactor;
+	leftRectInteractive.width = 100*scaleFactor;	
+	
+	rightRectInteractive.x = Screen.width-((20+100)*scaleFactor);
+	rightRectInteractive.y = 20*scaleFactor;
+	rightRectInteractive.height = 100*scaleFactor;
+	rightRectInteractive.width = 100*scaleFactor;	
+		
 }
 
 function StartGame () : void {
@@ -171,160 +202,52 @@ function Update () {
 	
 	//TOUCH
 	if(touchMode){
-		
+		/*
+		if (jumpRectInteractive.Contains(Input.mousePosition)){
+			print("Jump");
+		}
+		if (leftRectInteractive.Contains(Input.mousePosition)){
+			print("Left");
+		}
+		if (rightRectInteractive.Contains(Input.mousePosition)){
+			print("Right");
+		}		
+		*/
+	
 		#if UNITY_ANDROID || UNITY_IPHONE
-		
-		var fingerCount = 0;
-
-		
-	    if (Input.touchCount == 1 || Input.touchCount == 2 ){  // 
-
-			interacting = true;
+			var touchCount : int = 0;
 			
-			for (var touch : Touch in Input.touches) {
-				
+			var myTouches : Touch[] = Input.touches;
+       		for(var i : int = 0; i < Input.touchCount; i++){
+        
+				interacting = true;
+				touchCount++;
 				//Check for Jump
-				if(touch.phase == TouchPhase.Began){
-					if(touch.position.x > edging && touch.position.x < jumpPanelWidth+edging && touch.position.y > edging && touch.position.y < jumpPanelHeight+edging)
+				if(myTouches[i].phase == TouchPhase.Began)
+					if (jumpRectInteractive.Contains(myTouches[i].position)){
 						JumpCheck(0);
-					
-				}
-							
-				if(touch.phase == TouchPhase.Ended){
-					if(touch.position.x > edging && touch.position.x < jumpPanelWidth+edging && touch.position.y > edging && touch.position.y < jumpPanelHeight+edging)
+					}
+			
+				if(myTouches[i].phase == TouchPhase.Ended)
+					if (jumpRectInteractive.Contains(myTouches[i].position)){
 						holdingJump = false;
-				}
+					}
 											
-				if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled){
-					
+				if (myTouches[i].phase != TouchPhase.Ended && myTouches[i].phase != TouchPhase.Canceled){
 					//Movement
-					if(touch.position.x > Screen.width-(movementPanelWidth+edging) && touch.position.x < Screen.width-edging && touch.position.y > edging && touch.position.y < movementPanelHeight+edging){
-						//Left
-						if(touch.position.x > Screen.width-(movementPanelWidth+edging) && touch.position.x < Screen.width-edging-(movementPanelWidth/2) && touch.position.y > edging && touch.position.y < movementPanelHeight+edging){
-							direction = -1;
-						}
-						
-						//Right
-						if(touch.position.x > (Screen.width-(movementPanelWidth+edging))+(movementPanelWidth/2) && touch.position.x < Screen.width-edging && touch.position.y > edging && touch.position.y < movementPanelHeight+edging){
-							direction = 1;
-						}						
-					}else{
-						direction = 0;
+					if (leftRectInteractive.Contains(myTouches[i].position))
+						direction = -1;
+					else if (rightRectInteractive.Contains(myTouches[i].position))
+						direction = 1;
 					}
 				}
-			}		
-			
-			
-			
-			
-			/*
-			if(Input.GetTouch(0).phase == TouchPhase.Began){
-				previousTouchPoint = Input.GetTouch(0).position;
-				lastPosition = Input.GetTouch(0).position;
-			}
-			
-			if(Input.GetTouch(0).position.x < previousTouchPoint.x-70)
-				direction = -1;
-			else if(Input.GetTouch(0).position.x > previousTouchPoint.x+70)
-				direction = 1;
-			else
+				
+			if(touchCount == 0){			
+				interacting = false;
 				direction = 0;
-		
-		
-		
-			var currentPosition = Input.GetTouch(0).position;
-			var deltaPosition = currentPosition-lastPosition;
-			lastPosition = currentPosition;	
-			
-			if(deltaPosition.y > 60){
-					JumpCheck(2);
-			}else if(deltaPosition.y>30){
-					JumpCheck(1);			
+				holdingJump = false;	
 			}
-			
-			*/
-			
-			/*	
-			if(deltaPosition.y > 5){
-				//track Y				
-				jumpLine = Input.GetTouch(0).position.y-previousTouchPoint.y;
-			}else{
-				//reset Y
-				if(jumpLine > Screen.height/3){
-					JumpCheck(2);
-				}else if(jumpLine > Screen.height/4){
-					JumpCheck(1);
-				}
-				previousTouchPoint.y = Input.GetTouch(0).position.y;
-				jumpLine = 0;	
-			}
-			*/
-		
-		#endif	
-		#if UNITY_STANDALONE || UNITY_WEBGL
-		 if(Input.GetMouseButton(0)){
-			
-			interacting = true;
-			
-			if(Input.GetMouseButtonDown(0)){
-				lastPosition = Input.mousePosition;
-				previousTouchPoint = Input.mousePosition;
-			}
-			
-			if(previousTouchPoint.y > Input.mousePosition.y){
-				previousTouchPoint.y = Input.mousePosition.y;
-			}
-			
-			if(Input.mousePosition.x < previousTouchPoint.x-30)
-				direction = -1;
-			else if(Input.mousePosition.x > previousTouchPoint.x+30)
-				direction = 1;
-			else
-				direction = 0;	
-			
-			var currentPosition = Input.mousePosition;
-			var deltaPosition = currentPosition-lastPosition;
-			lastPosition = currentPosition;
-			
-			if(deltaPosition.y > 5){
-				jumpLine = Input.mousePosition.y-previousTouchPoint.y;
-			}else{
-				if(jumpLine > 300){
-					JumpCheck(2);
-					Debug.Log(jumpLine);
-				}else if(jumpLine > 75){
-					JumpCheck(1);
-				}
-				previousTouchPoint.y = Input.mousePosition.y;
-				jumpLine = 0;
-			}
-			
-			
-			/*
-			if(deltaPosition.y > jumpSwipe){ // 40
-				JumpCheck(2);
-			}else if(deltaPosition.y > jumpSwipe/2){ //22.5
-				JumpCheck(1);
-			} 
-			*/
-														
-		#endif		
-			
-		}else{
-			previousTouchPoint = Vector2.zero;
-			interacting = false;
-			//jumpPanel.SetBool("Jump", false);	
-			direction = 0;
-		}
-		
-		/*
-     	if (Input.touchCount == 2){  // 
-			if(Input.GetTouch(1).phase == TouchPhase.Began)
-				JumpCheck(0);
-		
-		}
-		*/
-		
+		#endif
 	}
 	
 	// Manage acceleration
@@ -400,7 +323,6 @@ function JumpSmall () : IEnumerator {
 	if(jumping && !errorCorrection)
 		return;
 	
-	//Debug.Log("Jump Small");
 	errorCorrection = false;
 	jumping = true;	
 	audioManager.Jump();
@@ -417,20 +339,10 @@ function JumpSmall () : IEnumerator {
 }
 
 function JumpBig () : IEnumerator {
-	//if(jumping && !errorCorrection)
-	//	return;
-	
-	//Debug.Log("Jump Big");
 	animator.SetTrigger("bigJump");
 	errorCorrection = false;
 	jumping = true;	
 	audioManager.Jump();
 	characterRigidbody.velocity.y += jumpHeight/2;		
 	yield WaitForSeconds(0.1f); // Lift off
-	
-	//while(!grounded){
-	//	yield; // Wait until landed
-	//}
-	
-	//jumping = false;
 }
