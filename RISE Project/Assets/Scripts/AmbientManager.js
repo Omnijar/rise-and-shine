@@ -4,16 +4,19 @@ var topColorStart : Color;
 var bottomColorStart : Color;
 var lightColorStart : Color;
 var ambientColorStart : Color;
+var fogColorStart : Color;
 
 var topColorMiddle : Color;
 var bottomColorMiddle : Color;
 var lightColorMiddle : Color;
 var ambientColorMiddle : Color;
+var fogColorMiddle : Color;
 
 var topColorEnd : Color;
 var bottomColorEnd : Color;
 var lightColorEnd : Color;
 var ambientColorEnd : Color;
+var fogColorEnd : Color;
 
 var skyPlane : Renderer;
 var globalLight : Light;
@@ -34,17 +37,20 @@ private var currentTopColor : Color;
 private var currentBottomColor : Color;
 private var currentLightColor : Color;
 private var currentAmbientColor : Color;
+private var currentFogColor : Color;
 
 private var actualTopColor : Color;
 private var actualBottomColor : Color;
 private var actualLightColor : Color;
 private var actualAmbientColor : Color;
+private var actualFogColor : Color;
 
 function Awake () {
 	actualTopColor = topColorStart;
 	actualBottomColor = bottomColorStart;
 	actualLightColor = lightColorStart;
 	actualAmbientColor = ambientColorStart;
+	actualFogColor =fogColorStart;
 	
 	startPos = player.position.x;
 	playerPos = player.position.x;
@@ -77,6 +83,7 @@ function SetLighting ( pos : float ) : void {
 		//Lighting
 		currentLightColor = Color.Lerp(lightColorStart, lightColorMiddle, ambienceCurve.Evaluate(pos));
 		currentAmbientColor = Color.Lerp(ambientColorStart, ambientColorMiddle, ambienceCurve.Evaluate(pos));
+		currentFogColor = Color.Lerp(fogColorStart, fogColorMiddle, ambienceCurve.Evaluate(pos));
 	}else if(pos < 0.666f){
 		//Gradient
 		currentTopColor = Color.Lerp(topColorMiddle, topColorMiddle, ambienceCurve.Evaluate(pos));
@@ -84,6 +91,7 @@ function SetLighting ( pos : float ) : void {
 		//Lighting
 		currentLightColor = Color.Lerp(lightColorMiddle, lightColorMiddle, ambienceCurve.Evaluate(pos));
 		currentAmbientColor = Color.Lerp(ambientColorMiddle, ambientColorMiddle, ambienceCurve.Evaluate(pos));
+		currentFogColor = Color.Lerp(fogColorMiddle, fogColorMiddle, ambienceCurve.Evaluate(pos));
 	}else{
 		//Gradient
 		currentTopColor = Color.Lerp(topColorMiddle, topColorEnd, ambienceCurve.Evaluate(pos));
@@ -91,6 +99,7 @@ function SetLighting ( pos : float ) : void {
 		//Lighting
 		currentLightColor = Color.Lerp(lightColorMiddle, lightColorEnd, ambienceCurve.Evaluate(pos));
 		currentAmbientColor = Color.Lerp(ambientColorMiddle, ambientColorEnd, ambienceCurve.Evaluate(pos));
+		currentFogColor = Color.Lerp(fogColorMiddle, fogColorEnd, ambienceCurve.Evaluate(pos));
 	}
 }
 
@@ -105,6 +114,7 @@ function Calculate () : void {
 	
 	globalLight.color = actualLightColor;
 	RenderSettings.ambientSkyColor = actualAmbientColor;
+	RenderSettings.fogColor = actualFogColor;
 	
 	var gradient : Texture2D = new Texture2D(1,2);
 	gradient.SetPixel(0,0,actualTopColor);

@@ -70,6 +70,7 @@ var rightRectInteractive : Rect;
 
 var canvasScaler : UnityEngine.UI.CanvasScaler;
 var scaleFactor : float;
+var cape : Animator;
 
 function Awake () {
 	#if UNITY_ANDROID || UNITY_IPHONE
@@ -190,11 +191,15 @@ function JumpCheck ( inputType : int ) : IEnumerator {
 function Update () {
 
 	animator.SetBool("jumping", jumping);
-	
-	if(characterRigidbody.velocity.magnitude > 1)
+	cape.SetBool("Jumping", jumping);
+
+	if(characterRigidbody.velocity.magnitude > 1){
+		cape.SetBool("Moving", true);
 		animator.SetInteger("speed", 1);	
-	else
+	}else{
+		cape.SetBool("Moving", false);
 		animator.SetInteger("speed", 0);
+	}
 	
 	if(!playable){
 		if(keyboardMode && lifeManager.respawning)
@@ -372,7 +377,7 @@ function JumpSmall () : IEnumerator {
 	while(!grounded){
 		yield; // Wait until landed
 	}
-	
+	cape.SetBool("Jumping", false);
 	animator.SetBool("jumpBig", false);
 
 	jumping = false;
