@@ -259,7 +259,9 @@ function Update () {
 				touchCount++;
 				//Check for Jump
 				if(myTouches[i].phase == TouchPhase.Began){
-					audioManager.Click();
+					
+					if(playable && Time.timeScale != 0)
+						audioManager.Click();
 
 					if (jumpRectInteractive.Contains(myTouches[i].position)){
 						JumpCheck(0);

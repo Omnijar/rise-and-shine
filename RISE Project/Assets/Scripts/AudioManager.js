@@ -24,5 +24,5 @@ function Respawn () : void {
 }
 
 function Click () : void {
-	audioSource.PlayOneShot(clickClip, 0.7F);	
+	audioSource.PlayOneShot(clickClip, 0.75F);	
 }
