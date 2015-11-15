@@ -3,6 +3,7 @@
 var jumpClip: AudioClip;
 var deathClip: AudioClip;
 var respawnClip: AudioClip;
+var clickClip: AudioClip;
 //var audioClip: AudioClip;
 private var audioSource : AudioSource;
 
@@ -11,7 +12,7 @@ function Awake () {
 }
 
 function Jump () : void {
-	audioSource.PlayOneShot(jumpClip, 1F);	
+	audioSource.PlayOneShot(jumpClip, 0.8F);	
 }
 
 function Death () : void {
@@ -20,4 +21,8 @@ function Death () : void {
 
 function Respawn () : void {
 	audioSource.PlayOneShot(respawnClip, 1F);	
+}
+
+function Click () : void {
+	audioSource.PlayOneShot(clickClip, 0.7F);	
 }

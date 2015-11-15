@@ -92,23 +92,58 @@ function Awake () {
 }
 
 function Start () {
-	scaleFactor = canvasScaler.scaleFactor;
 	
-	jumpRectInteractive.x = 20*scaleFactor;
-	jumpRectInteractive.y = 20*scaleFactor;
-	jumpRectInteractive.height = 100*scaleFactor;
-	jumpRectInteractive.width = 100*scaleFactor;
+	//Debug.Log(leftRect.rect..x);
 	
-	leftRectInteractive.x = Screen.width-((20+200)*scaleFactor);
-	leftRectInteractive.y = 20*scaleFactor;
-	leftRectInteractive.height = 100*scaleFactor;
-	leftRectInteractive.width = 100*scaleFactor;	
+	//jumpRectInteractive = jumpRect.rect;
+	//leftRectInteractive = leftRect.rect;
+	//rightRectInteractive = rightRect.rect;
 	
-	rightRectInteractive.x = Screen.width-((20+100)*scaleFactor);
-	rightRectInteractive.y = 20*scaleFactor;
-	rightRectInteractive.height = 100*scaleFactor;
-	rightRectInteractive.width = 100*scaleFactor;	
-		
+
+	//scaleFactor = canvasScaler.scaleFactor;
+	
+	var buffer : float = 30;
+	var buttonWidth : float = 200;
+	
+	jumpRectInteractive.x = buffer;
+	jumpRect.anchoredPosition.x = jumpRectInteractive.x;
+	
+	jumpRectInteractive.y = buffer;
+	jumpRect.anchoredPosition.y = jumpRectInteractive.y;
+	
+	jumpRectInteractive.height = buttonWidth;
+	jumpRect.rect.height = jumpRectInteractive.height;
+	
+	jumpRectInteractive.width = buttonWidth;
+	jumpRect.rect.width = jumpRectInteractive.width;
+	
+	
+	leftRectInteractive.height = buttonWidth;
+	leftRect.rect.height = leftRectInteractive.height;
+	
+	leftRectInteractive.width = buttonWidth;
+	leftRect.rect.width = leftRectInteractive.width;
+	
+	leftRectInteractive.x = Screen.width-((buffer+(buttonWidth*2)));
+	leftRect.anchoredPosition.x = leftRectInteractive.x;
+	
+	leftRectInteractive.y = buffer;
+	leftRect.anchoredPosition.x = leftRectInteractive.y;
+	
+	
+	
+	rightRectInteractive.height = buttonWidth;
+	rightRect.rect.height = rightRectInteractive.height;
+	
+	rightRectInteractive.width = buttonWidth;
+	rightRect.rect.width = rightRectInteractive.width;			
+	
+	rightRectInteractive.x = Screen.width-(buffer+buttonWidth);
+	rightRect.anchoredPosition.x = rightRectInteractive.x;
+	
+	rightRectInteractive.y = buffer;
+	rightRect.anchoredPosition.x = rightRectInteractive.y;
+	
 }
 
 function StartGame () : void {
@@ -223,11 +258,14 @@ function Update () {
 				interacting = true;
 				touchCount++;
 				//Check for Jump
-				if(myTouches[i].phase == TouchPhase.Began)
+				if(myTouches[i].phase == TouchPhase.Began){
+					audioManager.Click();
+
 					if (jumpRectInteractive.Contains(myTouches[i].position)){
 						JumpCheck(0);
 					}
-			
+				}
+				
 				if(myTouches[i].phase == TouchPhase.Ended)
 					if (jumpRectInteractive.Contains(myTouches[i].position)){
 						holdingJump = false;

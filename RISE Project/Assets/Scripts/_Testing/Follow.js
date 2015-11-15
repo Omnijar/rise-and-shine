@@ -18,9 +18,11 @@ var respawning : boolean;
 var animator : Animator;
 var characterVisual : Transform;
 
+var recruitAnimator : Animator;
 private var running : boolean;
 
 var lastPos : Vector3;
+var particleEffect : ParticleSystem;
 
 function Initialise ( toggle : boolean ) : IEnumerator {
 	if(running)
@@ -35,11 +37,21 @@ function Initialise ( toggle : boolean ) : IEnumerator {
 		characterVisual.rotation.y = targetVisual.rotation.y;
 	}else{
 		collected = true;
+		animator.SetBool("recruit", true);
+		recruitAnimator.SetTrigger("show");
+	
+		if(particleEffect)
+			particleEffect.Play();
+		else
+			Debug.Log("Need's Particle");
 	}
 	
 	Record();
 	yield WaitForSeconds(followDelay);
 	Follow();
+	yield WaitForSeconds(0.1f);
+	animator.SetBool("recruit", false);
+
 }
 
 function Record () : IEnumerator {

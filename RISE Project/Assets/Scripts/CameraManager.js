@@ -28,7 +28,8 @@ function LateUpdate () {
 	if(follow){
 		//playerCamera.position.x = Mathf.SmoothDamp(playerCamera.position.x, target.position.x+offset.x, velocity.x, Time.deltaTime*speed);
 		playerCamera.position.x = Mathf.Lerp(playerCamera.position.x, target.position.x+offset.x, Time.deltaTime*15);
-		playerCamera.position.y = Mathf.SmoothDamp(playerCamera.position.y, target.position.y+offset.y, velocity.y, Time.deltaTime*(speed*3));		
+		playerCamera.position.y = Mathf.Lerp(playerCamera.position.y, target.position.y+offset.y, Time.deltaTime);
+		//playerCamera.position.y = Mathf.SmoothDamp(playerCamera.position.y, target.position.y+offset.y, velocity.y, Time.deltaTime*(speed*3));		
 	}	
 		
 		//playerCamera.position = Vector3.Lerp(playerCamera.position, target.position+offset, Time.deltaTime*speed);

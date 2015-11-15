@@ -17,7 +17,6 @@ var ambientColorEnd : Color;
 
 var skyPlane : Renderer;
 var globalLight : Light;
-var ambientIntensity : float = 0.75f;
 
 var player : Transform;
 //var start : Transform;

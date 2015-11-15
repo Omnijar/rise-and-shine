@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 40b1f0167a05640f5955ea5aa345fe0d
-timeCreated: 1446586214
+guid: 063dd8035a7064aaf83a31b3a2654ab7
+timeCreated: 1447364984
 licenseType: Pro
 ModelImporter:
   serializedVersion: 18
@@ -9,10 +9,9 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: SkyDome
-    9500000: //RootNode
+    4300000: BriefCase
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
@@ -54,7 +53,7 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     human: []
@@ -67,8 +66,10 @@ ModelImporter:
     legStretch: .0500000007
     feetSpacing: 0
     rootMotionBoneName: 
+    hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0
+  humanoidOversampling: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
